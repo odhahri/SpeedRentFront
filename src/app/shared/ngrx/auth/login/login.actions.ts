@@ -1,56 +1,23 @@
-import { createAction, props } from '@ngrx/store';
+import {createAction, props} from '@ngrx/store'
 export interface AuthLoginResponse {
-  results: any;
   user: any;
+  access_token: string;
+  refresh_token: string;
 }
+
+export interface AuthRefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
 export interface AuthLoginRequest {
   username: string;
   password: string;
 }
-export interface RefreshTokenResponse {
-  results: any;
-}
-export interface RefreshTokenRequest {
-  refresh_token: string;
-}
-export const loginRequest = createAction(
-  'Login Request',
-  props<{ credentials: AuthLoginRequest }>()
-);
-export const loginLoading = createAction(
-  'Login Loading',
-  props<{isLoginLoading:boolean}>()
-)
-export const loginSuccess = createAction(
-  'Login Success',
-  props<{ loginSuccessResponse: AuthLoginResponse }>()
-);
-export const secondaryloginSuccess = createAction(
-  ' Secondary Login Success',
-  props<{ loginSuccessResponse: AuthLoginResponse }>()
-);
-export const loginFailure = createAction(
-  'Login Failure',
-  props<{ error: string }>()
-);
-export const secondaryloginFailure = createAction(
-  'Secondary Login Failure',
-  props<{ error: string }>()
-);
-
-export const logout = createAction('Logout');
-
-export const refreshTokenRequest = createAction(
-  'RefreshToken Request',
-  props<{ request: RefreshTokenRequest }>()
-);
-
-export const refreshTokenSuccess = createAction(
-  'RefreshToken Success',
-  props<{ response: RefreshTokenResponse }>()
-);
-
-export const refreshTokenFailure = createAction(
-  'RefreshToken Failure',
-  props<{ error: string }>()
-);
+export const loginRequest = createAction('[Auth] Login Request', props<{ credentials: AuthLoginRequest }>());
+export const loginSuccess = createAction('[Auth] Login Success', props<{ loginSuccessResponse: AuthLoginResponse }>());
+export const loginFailure = createAction('[Auth] Login Failure', props<{ error: string }>());
+export const refreshTokenRequest = createAction('[Auth] Refresh Token Request', props<{ refresh_token: string }>());
+export const refreshTokenSuccess = createAction('[Auth] Refresh Token Success', props<{ refreshTokenResponse: AuthRefreshTokenResponse }>());
+export const refreshTokenFailure = createAction('[Auth] Refresh Token Failure', props<{ error: string }>());
+export const logout = createAction('[Auth] Logout');

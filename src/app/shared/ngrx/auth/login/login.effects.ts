@@ -1,60 +1,78 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
-import { loginRequest, loginSuccess } from './login.actions';
-import { exhaustMap, map, switchMap, tap } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { loginRequest, loginSuccess, loginFailure, refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure, logout, AuthLoginResponse, AuthRefreshTokenResponse } from './login.actions';
 
-@Injectable ()
+@Injectable()
 export class AuthEffects {
-    constructor(
-        private actions$: Actions, 
-        private service: AuthService,
-        private activeRoute: ActivatedRoute){
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService
+  ) {}
 
-    }
+  login$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginRequest),
+      exhaustMap(({ credentials }) =>
+        this.authService.loginUser(credentials).pipe(
+          map((loginSuccessResponse: AuthLoginResponse) => {
+            return loginSuccess({ loginSuccessResponse });
+          }),
+          catchError((error) => {
+            console.log('Erreur lors de la connexion:', error);
+            const errorMessage = error.message || 'Erreur lors de la connexion';
+            return of(loginFailure({ error: errorMessage }));
+          })
+        )
+      )
+    )
+  );
 
-    login$ = createEffect(() => this.actions$.pipe(
-        ofType(loginRequest),
-        exhaustMap(({credentials})=>{
-            return this.service.login(credentials).pipe(
-                switchMap ((loginSuccessResponse:any)=>{
-                    return this.service.getConnectedUser(loginSuccessResponse.results.access_token).pipe(map ((user:any)=>{
-                        loginSuccessResponse.user = user;
-                        return loginSuccess({loginSuccessResponse});
-                    }))
+  refreshToken$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(refreshTokenRequest),
+      exhaustMap(({ refresh_token }) =>
+        this.authService.refreshToken(refresh_token).pipe(
+          map((refreshTokenResponse: AuthRefreshTokenResponse) => {
+            return refreshTokenSuccess({ refreshTokenResponse });
+          }),
+          catchError((error) => {
+            console.log('Erreur lors du rafraîchissement d\'access:', error);
+            const errorMessage = error.message || 'Erreur lors du rafraîchissement d\'access';
+            return of(refreshTokenFailure({ error: errorMessage }));
+          })
+        )
+      )
+    )
+  );
 
-                })
-            )
-        })))
+  refreshTokenFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(refreshTokenFailure),
+      map(() => logout())
+    )
+  );
 
-        loginSuccess$ = createEffect(
-            () =>
-              this.actions$.pipe(
-                ofType(loginSuccess),
-                tap(({ loginSuccessResponse }) => {
-                  const currentPathRoot =
-                    this.activeRoute.snapshot.firstChild &&
-                    this.activeRoute.snapshot.firstChild.url[0].path;
-                  let redirectPath;
-                  for (let role of loginSuccessResponse.user.roles) {
-                    // 
-                  }
-                  if (redirectPath) {
-                  } else {
-                  }
-                })
-              ),
-            { dispatch: false }
-          );
-        
-          secondaryloginSuccess$ = createEffect(
-            () =>
-              this.actions$.pipe(
-                ofType(loginSuccess),
-                tap(({ loginSuccessResponse }) => {})
-              ),
-            { dispatch: false }
-          );
-          
+  loginFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(loginFailure),
+        tap(({ error }) => {
+          console.log('Login failed:', error);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  logout$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(logout),
+        tap(() => {
+          console.log('Logging out user');
+        })
+      ),
+    { dispatch: false }
+  );
 }
