@@ -29,6 +29,17 @@ export class AuthEffects {
     )
   );
 
+  loginSuccess$ = createEffect( ()=>
+    this.actions$.pipe(
+      ofType(loginSuccess),
+      tap(({loginSuccessResponse})=>{
+        console.log('Login success' , loginSuccessResponse.user)
+      })
+
+    ),{ dispatch: false }
+  )
+
+
   refreshToken$ = createEffect(() =>
     this.actions$.pipe(
       ofType(refreshTokenRequest),
@@ -46,6 +57,14 @@ export class AuthEffects {
       )
     )
   );
+
+  refreshTokenSuccess$ = createEffect(()=>
+  this.actions$.pipe(
+    ofType(refreshTokenSuccess),
+    tap(({refreshTokenResponse})=>{
+      console.log('Token refreshed successfuly')
+    })
+  ),{ dispatch: false })
 
   refreshTokenFailure$ = createEffect(() =>
     this.actions$.pipe(

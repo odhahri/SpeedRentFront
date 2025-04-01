@@ -1,6 +1,12 @@
 import {createAction, props} from '@ngrx/store'
+
+export interface User {
+  id: string;
+  username: string;
+  roles?: string[];
+}
 export interface AuthLoginResponse {
-  user: any;
+  user: User;
   access_token: string;
   refresh_token: string;
 }
