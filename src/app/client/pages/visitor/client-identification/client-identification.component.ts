@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { AuthLoginRequest, loginRequest } from 'src/app/shared/ngrx/auth/login/login.actions';
+import { interval, tap } from 'rxjs';
+import { selectLoginState } from 'src/app/shared/ngrx/auth/login/login.selectors';
 
 @Component({
   selector: 'app-client-identification',
@@ -8,24 +12,56 @@ import { CommonModule } from '@angular/common';
   templateUrl: './client-identification.component.html',
   styleUrls: ['./client-identification.component.scss']
 })
-export class ClientIdentificationComponent {
+
+
+
+export class ClientIdentificationComponent implements OnInit {
   authForm: FormGroup;
   isSignUp = false;
+  private store = inject(Store);
 
   constructor(private fb: FormBuilder) {
     this.authForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
     });
+
+  }
+  ngOnInit(): void {
+    if (!this.isSignUp) {
+      this.authForm.removeControl('confirmPassword');
+      this.authForm.clearValidators();
+      this.authForm.updateValueAndValidity();
+    }
   }
 
   toggleAuthMode() {
     this.isSignUp = !this.isSignUp;
-    if (!this.isSignUp) {
-      this.authForm.get('confirmPassword')?.reset();
+  
+    if (this.isSignUp) {
+      this.authForm.addControl('confirmPassword', this.fb.control('', Validators.required));
+  
+      this.authForm.setValidators(this.passwordMatchValidatorFactory());
+    } else {
+      this.authForm.clearValidators();
+  
+      this.authForm.removeControl('confirmPassword');
     }
+  
+    this.authForm.updateValueAndValidity();
   }
+
+
+  // Custom validator to check if confirmPassword matches password
+passwordMatchValidatorFactory(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  };
+}
+
 
   onSubmit() {
     if (this.authForm.valid) {
@@ -35,6 +71,14 @@ export class ClientIdentificationComponent {
       } else {
         // Handle sign in logic
         console.log('Sign In', this.authForm.value);
+        let credentials: AuthLoginRequest = { username: '', password: '' };
+        credentials.username = this.authForm.get('username')?.value || '';
+        credentials.password = this.authForm.get('password')?.value || '';
+        this.store.dispatch(loginRequest({credentials}))
+        setInterval(() => {
+          console.log(this.store.select(selectLoginState))
+        }, 5000);
+
       }
     }
   }

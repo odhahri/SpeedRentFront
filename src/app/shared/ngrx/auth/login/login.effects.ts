@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, map, of, tap } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -6,42 +6,41 @@ import { loginRequest, loginSuccess, loginFailure, refreshTokenRequest, refreshT
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService
-  ) {}
+  private authService = inject(AuthService);
 
-  login$ = createEffect(() =>
-    this.actions$.pipe(
+  login$ = createEffect(() => {
+    const actions$ = inject(Actions); // Injecte Actions ici
+    return actions$.pipe(
       ofType(loginRequest),
       exhaustMap(({ credentials }) =>
         this.authService.loginUser(credentials).pipe(
           map((loginSuccessResponse: AuthLoginResponse) => {
+            console.log('loginSuccessResponse : ',loginSuccessResponse)
             return loginSuccess({ loginSuccessResponse });
           }),
           catchError((error) => {
-            console.log('Erreur lors de la connexion:', error);
-            const errorMessage = error.message || 'Erreur lors de la connexion';
+            console.log('Erreur lors de la connexion :', error);
+            const errorMessage = error.error.message || 'Erreur lors de la connexion';
             return of(loginFailure({ error: errorMessage }));
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  loginSuccess$ = createEffect( ()=>
-    this.actions$.pipe(
+  loginSuccess$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
       ofType(loginSuccess),
-      tap(({loginSuccessResponse})=>{
-        console.log('Login success' , loginSuccessResponse.user)
+      tap(({ loginSuccessResponse }) => {
+        console.log('Login success', loginSuccessResponse);
       })
+    );
+  }, { dispatch: false });
 
-    ),{ dispatch: false }
-  )
-
-
-  refreshToken$ = createEffect(() =>
-    this.actions$.pipe(
+  refreshToken$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
       ofType(refreshTokenRequest),
       exhaustMap(({ refresh_token }) =>
         this.authService.refreshToken(refresh_token).pipe(
@@ -55,43 +54,44 @@ export class AuthEffects {
           })
         )
       )
-    )
-  );
+    );
+  });
 
-  refreshTokenSuccess$ = createEffect(()=>
-  this.actions$.pipe(
-    ofType(refreshTokenSuccess),
-    tap(({refreshTokenResponse})=>{
-      console.log('Token refreshed successfuly')
-    })
-  ),{ dispatch: false })
+  refreshTokenSuccess$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
+      ofType(refreshTokenSuccess),
+      tap(({ refreshTokenResponse }) => {
+        console.log('Token refreshed successfully');
+      })
+    );
+  }, { dispatch: false });
 
-  refreshTokenFailure$ = createEffect(() =>
-    this.actions$.pipe(
+  refreshTokenFailure$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
       ofType(refreshTokenFailure),
       map(() => logout())
-    )
-  );
+    );
+  });
 
-  loginFailure$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(loginFailure),
-        tap(({ error }) => {
-          console.log('Login failed:', error);
-        })
-      ),
-    { dispatch: false }
-  );
+  loginFailure$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
+      ofType(loginFailure),
+      tap(({ error }) => {
+        console.log('Login failed:', error);
+      })
+    );
+  }, { dispatch: false });
 
-  logout$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(logout),
-        tap(() => {
-          console.log('Logging out user');
-        })
-      ),
-    { dispatch: false }
-  );
+  logout$ = createEffect(() => {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
+      ofType(logout),
+      tap(() => {
+        console.log('Logging out user');
+      })
+    );
+  }, { dispatch: false });
 }

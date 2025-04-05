@@ -1,9 +1,48 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { RequestInterceptor, requestInterceptorFn } from './shared/interceptors/auth.interceptor';
+import { authReducer } from './shared/ngrx/auth/login/login.reducers';
+import { AuthEffects } from './shared/ngrx/auth/login/login.effects';
+import { AuthService } from './shared/services/auth.service';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideClientHydration(withEventReplay())]
+  providers: [
+    // Configurer le router
+    provideRouter(routes),
+
+    // Configurer le client HTTP et l'intercepteur
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([requestInterceptorFn]) // Utilise la fonction d'adaptation
+    ),
+
+    // Configurer NgRx Store
+    provideStore({
+      auth: authReducer // Enregistre le réducteur pour l'authentification
+    }),
+
+    // Configurer NgRx Effects
+    provideEffects([AuthEffects]),
+
+    // Configurer NgRx Store DevTools (pour le débogage, en développement uniquement)
+    provideStoreDevtools({
+      maxAge: 25, // Nombre maximum d'actions à conserver
+      logOnly: false, // Permet d'utiliser les outils de débogage
+    }),
+
+
+
+    // Configurer les animations (nécessaires pour Toastr)
+    provideAnimations(),
+
+    // Fournir le service AuthService
+    AuthService,
+    RequestInterceptor,
+  ]
 };

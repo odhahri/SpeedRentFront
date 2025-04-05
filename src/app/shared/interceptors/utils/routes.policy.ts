@@ -1,5 +1,7 @@
+import { environment } from "../../environments/environment.dev";
+
 export const publicUrls: Array<string> = [
-    '/login',
+    `${environment.api_entry}/identification/signin/`,
     '/register',
     '/explore-cars',
 

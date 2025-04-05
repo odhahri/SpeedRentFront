@@ -12,8 +12,8 @@
                 <h3 class="text-center mb-4 fw-bold">{{ isSignUp ? 'Sign Up' : 'Sign In' }}</h3>
                 <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
                     <div class="form-floating mb-3">
-                        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Email" required>
-                        <label for="email">Email</label>
+                        <input type="username" id="email" formControlName="username" class="form-control" placeholder="Username" required>
+                        <label for="username">Username</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" id="password" formControlName="password" class="form-control" placeholder="Password" required>
