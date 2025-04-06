@@ -75,10 +75,6 @@ passwordMatchValidatorFactory(): ValidatorFn {
         credentials.username = this.authForm.get('username')?.value || '';
         credentials.password = this.authForm.get('password')?.value || '';
         this.store.dispatch(loginRequest({credentials}))
-        setInterval(() => {
-          console.log(this.store.select(selectLoginState))
-        }, 5000);
-
       }
     }
   }

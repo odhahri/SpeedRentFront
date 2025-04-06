@@ -9,5 +9,6 @@ export const publicUrls: Array<string> = [
 export const privateUrls: Array<string> =  [
     '/client',
     '/agent',
-    '/back-office'
+    '/back-office',
+    `${environment.api_entry}/identification/connected-user/`,
 ]

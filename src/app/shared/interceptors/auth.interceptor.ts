@@ -38,9 +38,10 @@ export class RequestInterceptor implements HttpInterceptor {
 
     // Traiter les URLs privées (token requis)
     return this.store.select(selectAccessToken).pipe(
-      take(1),
+      
       switchMap((access_token) => {
         if (this.privateUrls.includes(request.url) && !access_token) {
+          console.log(access_token)
           this.store.dispatch(logout());
           this.router.navigate(['/login']);
           return throwError(() => new Error('Unauthorized'));

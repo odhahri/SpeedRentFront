@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, exhaustMap, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { loginRequest, loginSuccess, loginFailure, refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure, logout, AuthLoginResponse, AuthRefreshTokenResponse } from './login.actions';
+import { loginRequest, loginSuccess, loginFailure, refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure, logout, AuthLoginResponse, AuthRefreshTokenResponse, User, fetchConnectedUser } from './login.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -32,11 +32,16 @@ export class AuthEffects {
     const actions$ = inject(Actions);
     return actions$.pipe(
       ofType(loginSuccess),
-      tap(({ loginSuccessResponse }) => {
-        console.log('Login success', loginSuccessResponse);
-      })
+      switchMap(({ loginSuccessResponse }) =>
+        this.authService.connectedUser().pipe(
+          map((ConnectedUserResponse: User) => {
+            return fetchConnectedUser({ ConnectedUserResponse });
+          })
+        )
+      )
     );
-  }, { dispatch: false });
+  });
+  
 
   refreshToken$ = createEffect(() => {
     const actions$ = inject(Actions);
