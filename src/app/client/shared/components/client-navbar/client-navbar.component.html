@@ -9,6 +9,7 @@
             <a class="nav-link" routerLink="/client/contact" routerLinkActive="active">Contact</a>
             <a class="nav-link" routerLink="/client/explore-cars" routerLinkActive="active">Explore Cars</a>
         </div>
-        <button class="btn btn-identification ms-md-auto" routerLink="/client/identification">Login</button>
+        <button *ngIf="!isUserConnected" class="btn btn-identification ms-md-auto" routerLink="/client/identification">Login</button>
+        <span *ngIf="isUserConnected"> Welcome {{connectedUserName}}</span>
     </div>
 </nav>

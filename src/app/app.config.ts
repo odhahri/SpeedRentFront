@@ -10,6 +10,7 @@ import { authReducer } from './shared/ngrx/auth/login/login.reducers';
 import { AuthEffects } from './shared/ngrx/auth/login/login.effects';
 import { AuthService } from './shared/services/auth.service';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { localStorageSyncReducer } from './shared/ngrx/auth/login/store-persistance/localstorageSyncReducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,8 +25,10 @@ export const appConfig: ApplicationConfig = {
 
     // Configurer NgRx Store
     provideStore({
-      auth: authReducer // Enregistre le réducteur pour l'authentification
-    }),
+      auth: authReducer // Enregistre le réducteur pour l'authentification,
+      
+    },
+    { metaReducers: [localStorageSyncReducer] }),
 
     // Configurer NgRx Effects
     provideEffects([AuthEffects]),
