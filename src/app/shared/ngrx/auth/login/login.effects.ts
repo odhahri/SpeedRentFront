@@ -3,11 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { loginRequest, loginSuccess, loginFailure, refreshTokenRequest, refreshTokenSuccess, refreshTokenFailure, logout, AuthLoginResponse, AuthRefreshTokenResponse, User, fetchConnectedUser } from './login.actions';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
   private authService = inject(AuthService);
-
+  private router = inject(Router)
   login$ = createEffect(() => {
     const actions$ = inject(Actions); // Injecte Actions ici
     return actions$.pipe(
@@ -96,6 +97,7 @@ export class AuthEffects {
       ofType(logout),
       tap(() => {
         console.log('Logging out user');
+        this.router.navigateByUrl('client/home')
       })
     );
   }, { dispatch: false });

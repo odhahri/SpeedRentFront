@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
@@ -31,7 +31,9 @@ export class ClientNavbarService {
 
   private hiddenRoutes: string[] = [
     '/client/identification',
-    '/client/special-page'
+    '/client/special-page',
+    '/client/account-management',
+    '/client'
   ];
 
   constructor(private router: Router) {

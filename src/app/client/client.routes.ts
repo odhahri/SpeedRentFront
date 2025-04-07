@@ -5,6 +5,7 @@ import { ClientAboutComponent } from './pages/visitor/client-about/client-about.
 import { ClientContactComponent } from './pages/visitor/client-contact/client-contact.component';
 import { ClientExploreCarsComponent } from './pages/visitor/client-explore-cars/client-explore-cars.component';
 import { ClientIdentificationComponent } from './pages/visitor/client-identification/client-identification.component';
+import { ClientManageAccountComponent } from './pages/client/client-manage-account/client-manage-account.component';
 export const CLIENT_ROUTES: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' }, 
   {
@@ -16,6 +17,8 @@ export const CLIENT_ROUTES: Routes = [
       { path: 'contact', component: ClientContactComponent },
       { path: 'explore-cars', component: ClientExploreCarsComponent },
       { path: 'identification', component: ClientIdentificationComponent },
+      { path: 'account-management', component: ClientManageAccountComponent },
+
 
     ]
   }

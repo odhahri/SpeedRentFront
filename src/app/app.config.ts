@@ -11,9 +11,17 @@ import { AuthEffects } from './shared/ngrx/auth/login/login.effects';
 import { AuthService } from './shared/services/auth.service';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { localStorageSyncReducer } from './shared/ngrx/auth/login/store-persistance/localstorageSyncReducer';
-
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimationsAsync(),
+        providePrimeNG({
+            theme: {
+                preset: Aura
+            }
+        }),
     // Configurer le router
     provideRouter(routes),
 
