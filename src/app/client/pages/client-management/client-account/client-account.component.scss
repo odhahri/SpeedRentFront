@@ -1,0 +1,49 @@
+
+
+.example-small-box {
+  //height: 100px;
+  //width: 100px;
+}
+.card {
+  border: none;
+}
+.example-large-box {
+}
+
+.vertical-mat-tab-group{
+
+  border: 1px solid var(--p-menubar-border-color);
+  border-radius: var(--p-menubar-border-radius);;
+}
+
+::ng-deep .vertical-mat-tab-group .mat-mdc-tab-labels {
+  height: 100%!important;
+  flex-direction: column;
+  width: 200px; /* width of the tab section */
+  border-right: 1px solid #ccc;
+
+}
+::ng-deep .vertical-mat-tab-group mat-tab-group {
+  flex-direction: row;
+  border-right: 1px solid #ccc;
+  width: 100%!important;
+}
+::ng-deep .vertical-mat-tab-group .mat-mdc-tab-body-wrapper {
+  width: 100%!important;
+
+}
+
+
+::ng-deep .vertical-mat-tab-group  .mat-mdc-tab-label-container {
+  border: none!important;
+}
+::ng-deep .vertical-mat-tab-group mat-tab-group{
+  border: none!important;
+
+}
+::ng-deep .vertical-mat-tab-group .mat-mdc-tab .mdc-tab__content{
+  height: 100%;
+}
+::ng-deep .vertical-mat-tab-group .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
+  padding: 50px;
+}

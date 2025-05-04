@@ -1,26 +1,28 @@
 import { Component, inject, OnInit, } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { ClientNavbarService } from '../../services/client-navbar.service';
+import { ClientNavigationService } from '../../services/client-navigation.service';
 import { Store } from '@ngrx/store';
 import { selectCurrentUser } from 'src/app/shared/ngrx/auth/login/login.selectors';
 import { map } from 'rxjs';
 import { logout, User } from 'src/app/shared/ngrx/auth/login/login.actions';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import {CLIENT_NAV_LINKS} from '../../utils/client-links';
 
 @Component({
   selector: 'app-client-navbar',
-  imports: [RouterModule,CommonModule, NgbDropdownModule],
+  imports: [RouterModule, CommonModule, NgbDropdownModule],
   templateUrl: './client-navbar.component.html',
+  standalone: true,
   styleUrl: './client-navbar.component.scss'
 })
 export class ClientNavbarComponent implements  OnInit  {
-  navlinks$ :any
   private store: Store = inject(Store)
+  navbarItems = Object.values(CLIENT_NAV_LINKS); // Dynamically load navbar items
+
   isUserConnected: boolean = false
   connectedUserName: string  = ''
-  constructor(private navbarService: ClientNavbarService, private router: Router) { 
-    this.navlinks$ = this.navbarService.navlinks$;
+  constructor(private navbarService: ClientNavigationService, private router: Router) {
     this.store.select(selectCurrentUser).pipe(map((connectedUser:User |null)=>{
       if (connectedUser == null){
         return false
@@ -35,7 +37,6 @@ export class ClientNavbarComponent implements  OnInit  {
   }
 
   ngOnInit() {
-    this.navlinks$.subscribe((links: any) => console.log("Navbar Links Updated:", links));
   }
 
   navigateTo(url:string){

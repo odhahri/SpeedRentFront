@@ -42,7 +42,17 @@ export class AuthEffects {
       )
     );
   });
-  
+
+  fetchConnectedUser$ = createEffect(()=> {
+    const actions$ = inject(Actions);
+    return actions$.pipe(
+      ofType(fetchConnectedUser),
+      tap(()=>{
+        this.router.navigateByUrl('client/home')
+      })
+    )
+  }, { dispatch: false })
+
 
   refreshToken$ = createEffect(() => {
     const actions$ = inject(Actions);

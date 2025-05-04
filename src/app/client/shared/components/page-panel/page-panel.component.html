@@ -1,0 +1,16 @@
+<p-menubar [model]="items">
+  <ng-template pTemplate="start">
+    <div class="flex items-center gap-4">
+      <input type="text" pInputText placeholder="Search" class="w-64" />
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <div class="flex items-center gap-4">
+      <p-overlay-badge value="4" severity="danger" class="inline-flex">
+        <p-avatar class="p-overlay-badge" image="https://primefaces.org/cdn/primeng/images/demo/avatar/walter.jpg" size="large" />
+      </p-overlay-badge>
+    </div>
+  </ng-template>
+</p-menubar>
+

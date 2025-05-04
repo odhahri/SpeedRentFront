@@ -1,29 +1,28 @@
 <nav class="p-3 bg-dark text-white">
-    <div
-        class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-5">
-        <div>
-            <img class="navbar-img"
-                src="https://img.freepik.com/premium-vector/rent-car-logo-design-concept-vector-art-illustration_761413-36225.jpg"
-                alt="">
-        </div>
-        <div class="nav-links d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 gap-md-5">
-            <a class="nav-link" routerLink="/client/home" routerLinkActive="active">Home</a>
-            <a class="nav-link" routerLink="/client/about" routerLinkActive="active">About</a>
-            <a class="nav-link" routerLink="/client/contact" routerLinkActive="active">Contact</a>
-            <a class="nav-link" routerLink="/client/explore-cars" routerLinkActive="active">Explore Cars</a>
-        </div>
-        <button *ngIf="!isUserConnected" class="btn btn-identification ms-md-auto"
-            routerLink="/client/identification">Login</button>
-        <div *ngIf="isUserConnected" ngbDropdown class="d-inline-block">
-            <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-                {{connectedUserName}}
-            </button>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                <button ngbDropdownItem (click)="navigateTo('/client/account-management')">Account</button>
-                <button ngbDropdownItem (click)="navigateTo('/client/reservations')">Reservations</button>
-                <button ngbDropdownItem (click)="logout()">Logout</button>
-            </div>
-        </div>
+  <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center gap-5">
+    <div>
+      <img
+        class="navbar-img"
+        src="https://img.freepik.com/premium-vector/rent-car-logo-design-concept-vector-art-illustration_761413-36225.jpg"
+        alt=""
+      />
     </div>
-
+    <div class="nav-links d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 gap-md-5">
+      <!-- Loop through navbarItems -->
+      <a class="nav-link" *ngFor="let item of navbarItems" [routerLink]="item.url" routerLinkActive="active">
+        {{ item.label }}
+      </a>
+    </div>
+    <button *ngIf="!isUserConnected" class="btn btn-identification ms-md-auto" routerLink="/client/identification">Login</button>
+    <div *ngIf="isUserConnected" ngbDropdown class="d-inline-block">
+      <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+        {{ connectedUserName }}
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem (click)="navigateTo('/client/client-management')">Account</button>
+        <button ngbDropdownItem (click)="navigateTo('/client/reservations')">Reservations</button>
+        <button ngbDropdownItem (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
 </nav>

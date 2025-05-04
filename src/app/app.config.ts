@@ -19,7 +19,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
         providePrimeNG({
             theme: {
-                preset: Aura
+                preset: Aura,
+                options: {
+                  darkModeSelector: '.my-app-dark'
+                }
             }
         }),
     // Configurer le router
@@ -34,7 +37,7 @@ export const appConfig: ApplicationConfig = {
     // Configurer NgRx Store
     provideStore({
       auth: authReducer // Enregistre le réducteur pour l'authentification,
-      
+
     },
     { metaReducers: [localStorageSyncReducer] }),
 

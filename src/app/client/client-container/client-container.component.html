@@ -1,4 +1,4 @@
 <app-client-navbar *ngIf="showNavbar$ | async"></app-client-navbar>
 <div class="router-outlet"><router-outlet></router-outlet>
 </div>
-<app-client-footer></app-client-footer>
+<app-client-footer *ngIf="showNavbar$ | async"></app-client-footer>

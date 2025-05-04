@@ -10,6 +10,7 @@ import { selectLoginState } from 'src/app/shared/ngrx/auth/login/login.selectors
   selector: 'app-client-identification',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './client-identification.component.html',
+  standalone: true,
   styleUrls: ['./client-identification.component.scss']
 })
 
@@ -37,17 +38,17 @@ export class ClientIdentificationComponent implements OnInit {
 
   toggleAuthMode() {
     this.isSignUp = !this.isSignUp;
-  
+
     if (this.isSignUp) {
       this.authForm.addControl('confirmPassword', this.fb.control('', Validators.required));
-  
+
       this.authForm.setValidators(this.passwordMatchValidatorFactory());
     } else {
       this.authForm.clearValidators();
-  
+
       this.authForm.removeControl('confirmPassword');
     }
-  
+
     this.authForm.updateValueAndValidity();
   }
 

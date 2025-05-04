@@ -1,0 +1,25 @@
+<div class="sidebar" [class.closed]="isClosed" >
+  <!-- Logo Section -->
+  <!-- Toggle Button -->
+<!--  <div class="toggle-btn" (click)="toggleSidebar()">-->
+<!--    <mat-icon>{{ isClosed ? 'menu' : 'menu' }}</mat-icon>-->
+<!--  </div>-->
+  <div class="logo-section" (click)="toggleSidebar()">
+    <div *ngIf="!isClosed">SpeedRent</div>
+    <i *ngIf="isClosed" class="fa fa-car fa-lg"></i>
+  </div>
+
+
+
+  <!-- Navigation Links -->
+  <nav>
+    <a *ngFor="let item of menuItems"
+       [routerLink]="item.url"
+       matTooltip="{{ item.label }}"
+       matTooltipPosition="right"
+       routerLinkActive="active">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span class="menu-label" [class.hidden]="isClosed">{{ item.label }}</span>
+    </a>
+  </nav>
+</div>
